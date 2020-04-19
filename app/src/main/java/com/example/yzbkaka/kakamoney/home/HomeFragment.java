@@ -14,7 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.yzbkaka.kakamoney.R;
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
 
     private int count = 0;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
@@ -52,13 +55,14 @@ public class HomeFragment extends Fragment {
         eye = (Button)view.findViewById(R.id.eye);
         monthIncome = (TextView)view.findViewById(R.id.month_income);
         monthBudget = (TextView)view.findViewById(R.id.month_budget);
-        recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
+        //recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
         add = (FloatingActionButton)view.findViewById(R.id.add);
         initView();
         return view;
     }
 
     private void initView(){
+        collapsingToolbarLayout.setTitle("yzbkaka");
         if(count % 2 == 0){
 
         }else {
