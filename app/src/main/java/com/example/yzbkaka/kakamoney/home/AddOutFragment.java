@@ -60,6 +60,10 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
 
     private Calendar calendar;
 
+    private String money;
+
+    private String message;
+
     private int year,month,day;
 
     private MyDatabaseHelper databaseHelper;
@@ -79,7 +83,7 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
         year = calendar.get(Calendar.YEAR);  //获取年份
         month = calendar.get(Calendar.MONTH) + 1;  //获取月份
         day = calendar.get(Calendar.DATE);  //获取日子
-        databaseHelper = new MyDatabaseHelper(MyApplication.getContext(),"kakaMoneyStore.db",null,1);
+        databaseHelper = MyDatabaseHelper.getInstance();
         return view;
     }
 
@@ -113,22 +117,22 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        String money = outText.getText().toString();  //获取输入的消费金额
-        String message = outMessage.getText().toString();  //获取输入的备注信息
-        saveOut(money,outType,message,year,month,day);
+        money = outText.getText().toString();  //获取输入的消费金额
+        message = outMessage.getText().toString();  //获取输入的备注信息
+        saveOut();
     }
 
     /**
      * 将金额、消费类型、备注和日期存储到数据库
      */
-    public void saveOut(String money,int outType,String message,int year,int month,int day){
-        while (outType == -1){
+    public void saveOut(){
+        /*while (outType == -1){
             Toast.makeText(MyApplication.getContext(), "请选择流出类型", Toast.LENGTH_SHORT).show();
-        }
+        }*/
         if(money != null){
             SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("money",Integer.valueOf(money));
+            contentValues.put("money",money);
             contentValues.put("message",message);
             contentValues.put("kind",Type.OUT);
             contentValues.put("type",outType);

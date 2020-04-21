@@ -2,6 +2,8 @@ package com.example.yzbkaka.kakamoney.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -21,12 +23,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.yzbkaka.kakamoney.R;
+import com.example.yzbkaka.kakamoney.db.MyDatabaseHelper;
+import com.example.yzbkaka.kakamoney.model.Account;
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-public class HomeFragment extends Fragment {
+
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -46,6 +54,14 @@ public class HomeFragment extends Fragment {
 
     private int count = 0;
 
+    private MyDatabaseHelper databaseHelper;
+
+    private List<Account> accountList = new ArrayList<>();
+
+    private Calendar calendar;
+
+    private int year,month,day;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,12 +74,17 @@ public class HomeFragment extends Fragment {
         monthBudget = (TextView)view.findViewById(R.id.month_budget);
         recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
         add = (FloatingActionButton)view.findViewById(R.id.add);
+        databaseHelper = MyDatabaseHelper.getInstance();
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH) + 1;
+        day = calendar.get(Calendar.DATE);
         initView();
         return view;
     }
 
     private void initView(){
-        if(count % 2 == 0){
+        if(count % 2 != 0){
 
         }else {
 
@@ -81,6 +102,32 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.query("Account",null,"year = ? and month = ? and day = ?",new String[]{String.valueOf(year),String.valueOf(month),String.valueOf(day)},null,null,null);
+        if(cursor.moveToFirst()){
+            while (cursor.moveToNext()){
+                Account account = new Account();
+                account.setMoney(cursor.getString(cursor.getColumnIndex("money")));
+                account.setMessage(cursor.getString(cursor.getColumnIndex("message")));
+                account.setKind(cursor.getInt(cursor.getColumnIndex("kind")));
+                account.setType(cursor.getInt(cursor.getColumnIndex("type")));
+                account.setYear(cursor.getInt(cursor.getColumnIndex("year")));
+                account.setMonth(cursor.getInt(cursor.getColumnIndex("month")));
+                account.setDay(cursor.getInt(cursor.getColumnIndex("int")));
+                accountList.add(account);
+            }
+        }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
 

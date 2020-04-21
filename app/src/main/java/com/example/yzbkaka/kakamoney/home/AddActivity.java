@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.R;
 
@@ -28,6 +29,8 @@ public class AddActivity extends AppCompatActivity {
     private List<String> titleList = new ArrayList<>();
 
     private List<Fragment> fragmentList = new ArrayList<>();
+
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +93,51 @@ public class AddActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                finish();
+                count++;
+                if(count == 2){
+                    finish();
+                }else{
+                    Toast.makeText(this, "别忘了点击右上角进行存储哦", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.save:
-                AddOutFragment addOutFragment = new AddOutFragment();
-                addOutFragment.saveOut();
+                Fragment fragment = getCurrentFragment();
+                if(fragment instanceof AddOutFragment){
+                    ((AddOutFragment) fragment).saveOut();
+                    Toast.makeText(this, "存储成功", Toast.LENGTH_SHORT).show();
+                }else{
+
+                }
+                finish();
+                break;
 
         }
         return false;
+    }
+
+    /**
+     * 获取当前展示的是哪一个fragment
+     */
+    public Fragment getCurrentFragment(){
+        FragmentManager fragmentManager = AddActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
+    }
+
+    /**
+     * 对返回按钮进行监听
+     */
+    @Override
+    public void onBackPressed() {
+        count++;
+        if(count == 2){
+            finish();
+        }else{
+            Toast.makeText(this, "别忘了点击右上角进行存储哦", Toast.LENGTH_SHORT).show();
+        }
     }
 }
