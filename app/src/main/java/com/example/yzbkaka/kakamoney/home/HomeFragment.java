@@ -3,6 +3,7 @@ package com.example.yzbkaka.kakamoney.home;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -55,14 +56,13 @@ public class HomeFragment extends Fragment {
         eye = (Button)view.findViewById(R.id.eye);
         monthIncome = (TextView)view.findViewById(R.id.month_income);
         monthBudget = (TextView)view.findViewById(R.id.month_budget);
-        //recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
+        recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
         add = (FloatingActionButton)view.findViewById(R.id.add);
         initView();
         return view;
     }
 
     private void initView(){
-        collapsingToolbarLayout.setTitle("yzbkaka");
         if(count % 2 == 0){
 
         }else {
