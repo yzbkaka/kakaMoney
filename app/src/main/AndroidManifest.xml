@@ -17,7 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".home.AddActivity"></activity>
+        <activity android:name=".home.AddActivity" />
+        <activity android:name=".home.SelectTimeActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
     </application>
 
 </manifest>
