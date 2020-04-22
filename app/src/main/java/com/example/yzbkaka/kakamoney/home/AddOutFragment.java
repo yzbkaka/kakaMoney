@@ -37,6 +37,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddOutFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "AddOutFragment";
+
     private EditText outText;
 
     private Button food;
@@ -56,7 +58,7 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
 
     private EditText outMessage;
 
-    private int outType = -1;
+    private int outType = Type.OTHER;
 
     private Calendar calendar;
 
@@ -114,33 +116,28 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
         other.setOnClickListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        money = outText.getText().toString();  //获取输入的消费金额
-        message = outMessage.getText().toString();  //获取输入的备注信息
-        saveOut();
-    }
-
     /**
      * 将金额、消费类型、备注和日期存储到数据库
      */
     public void saveOut(){
         /*while (outType == -1){
             Toast.makeText(MyApplication.getContext(), "请选择流出类型", Toast.LENGTH_SHORT).show();
+
         }*/
-        if(money != null){
-            SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("money",money);
-            contentValues.put("message",message);
-            contentValues.put("kind",Type.OUT);
-            contentValues.put("type",outType);
-            contentValues.put("year",year);
-            contentValues.put("month",month);
-            contentValues.put("day",day);
-            sqLiteDatabase.insert("Account",null,contentValues);
-        }
+        money = outText.getText().toString();  //获取输入的消费金额
+        Log.d(TAG, "money1: " + money);
+        message = outMessage.getText().toString();  //获取输入的备注信息
+        Log.d(TAG, "message1: " + message);
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("money",money);
+        contentValues.put("message",message);
+        contentValues.put("kind",Type.OUT);
+        contentValues.put("type",outType);
+        contentValues.put("year",year);
+        contentValues.put("month",month);
+        contentValues.put("day",day);
+        sqLiteDatabase.insert("Account",null,contentValues);
     }
 
 

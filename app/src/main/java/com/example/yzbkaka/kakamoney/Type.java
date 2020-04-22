@@ -6,27 +6,31 @@ package com.example.yzbkaka.kakamoney;
 
 public class Type {
 
-    public static final int OUT = 1;
+    public static final int OUT = 100;
 
-    public static final int IN = 2;
+    public static final int IN = 200;
 
-    public static final int FOOD = 10;
+    public static final int FOOD = 0;
 
-    public static final int BUS = 11;
+    public static final int BUS = 1;
 
-    public static final int FUN = 12;
+    public static final int FUN = 2;
 
-    public static final int CONNECT = 13;
+    public static final int CONNECT = 3;
 
-    public static final int HOUSE = 14;
+    public static final int HOUSE = 4;
 
-    public static final int EDUCATION = 15;
+    public static final int EDUCATION = 5;
 
-    public static final int AID = 16;
+    public static final int AID = 6;
 
-    public static final int TRIP = 17;
+    public static final int TRIP = 7;
 
-    public static final int LEND = 18;
+    public static final int LEND = 8;
 
-    public static final int OTHER = 19;
+    public static final int OTHER = 9;
+
+    public static final String[] TYPE_NAME = new String[]{"餐饮","交通","娱乐","通讯","住房","教育","医疗","旅游","借出","其他"};
+
+    public static final int[] TYPE_IMAGE = new int[]{R.drawable.food_pressed,R.drawable.bus_pressed,R.drawable.fun_pressed,R.drawable.connect_pressed, R.drawable.house_pressed,R.drawable.education_pressed,R.drawable.aid_pressed,R.drawable.trip_pressed,R.drawable.lend_pressed,R.drawable.other_pressed};
 }

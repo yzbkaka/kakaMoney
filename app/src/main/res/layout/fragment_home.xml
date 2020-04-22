@@ -48,7 +48,7 @@
                         android:text="￥"/>
 
                     <TextView
-                        android:id="@+id/month_spending"
+                        android:id="@+id/month_spend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/spend￥"
