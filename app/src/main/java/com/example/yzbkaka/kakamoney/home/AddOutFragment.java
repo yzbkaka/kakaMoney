@@ -120,24 +120,20 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
      * 将金额、消费类型、备注和日期存储到数据库
      */
     public void saveOut(){
-        /*while (outType == -1){
-            Toast.makeText(MyApplication.getContext(), "请选择流出类型", Toast.LENGTH_SHORT).show();
-
-        }*/
         money = outText.getText().toString();  //获取输入的消费金额
-        Log.d(TAG, "money1: " + money);
         message = outMessage.getText().toString();  //获取输入的备注信息
-        Log.d(TAG, "message1: " + message);
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("money",money);
-        contentValues.put("message",message);
-        contentValues.put("kind",Type.OUT);
-        contentValues.put("type",outType);
-        contentValues.put("year",year);
-        contentValues.put("month",month);
-        contentValues.put("day",day);
-        sqLiteDatabase.insert("Account",null,contentValues);
+        if(!String.valueOf(money).equals("")){
+            SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("money",money);
+            contentValues.put("message",message);
+            contentValues.put("kind",Type.OUT);
+            contentValues.put("type",outType);
+            contentValues.put("year",year);
+            contentValues.put("month",month);
+            contentValues.put("day",day);
+            sqLiteDatabase.insert("Account",null,contentValues);
+        }
     }
 
 
@@ -187,6 +183,7 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
             case R.id.out_time:
                 Intent intent = new Intent(MyApplication.getContext(),SelectTimeActivity.class);
                 startActivityForResult(intent,1);
+                break;
 
         }
     }

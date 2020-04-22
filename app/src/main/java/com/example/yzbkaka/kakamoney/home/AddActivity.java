@@ -101,31 +101,13 @@ public class AddActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.save:
-                Fragment fragment = getCurrentFragment();
-                if(fragment instanceof AddOutFragment){
-                    ((AddOutFragment) fragment).saveOut();
-                    Toast.makeText(this, "存储成功", Toast.LENGTH_SHORT).show();
-                }else{
-
-                }
+                ((AddOutFragment)fragmentList.get(0)).saveOut();
+                ((AddInFragment) fragmentList.get(1)).saveIn();
                 finish();
                 break;
 
         }
         return false;
-    }
-
-    /**
-     * 获取当前展示的是哪一个fragment
-     */
-    public Fragment getCurrentFragment(){
-        FragmentManager fragmentManager = AddActivity.this.getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for(Fragment fragment : fragments){
-            if(fragment != null && fragment.isVisible())
-                return fragment;
-        }
-        return null;
     }
 
     /**
