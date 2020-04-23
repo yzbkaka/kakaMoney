@@ -1,6 +1,7 @@
 package com.example.yzbkaka.kakamoney.home;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.R;
 import com.example.yzbkaka.kakamoney.Type;
@@ -26,6 +28,9 @@ import com.example.yzbkaka.kakamoney.setting.MyApplication;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -51,7 +56,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 本月预算text
      */
-    private TextView monthBudgetText;
+    private TextView budgetLeftText;
 
     /**
      * 预算按钮
@@ -84,6 +89,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
      */
     private int monthInSum = 0;
 
+    /**
+     * 预算剩余
+     */
+    private int budgetLeft = 0;
 
 
     @Override
@@ -93,8 +102,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         toolbar = (Toolbar)view.findViewById(R.id.home_toolbar);
         monthOutText = (TextView)view.findViewById(R.id.month_spend);
         eye = (Button)view.findViewById(R.id.eye);
+        eye.setOnClickListener(this);
         monthInText = (TextView)view.findViewById(R.id.month_income);
-        monthBudgetText = (TextView)view.findViewById(R.id.month_budget);
+        budgetLeftText = (TextView)view.findViewById(R.id.month_budget);
         budgetButton = (Button)view.findViewById(R.id.budget_button);
         budgetButton.setOnClickListener(this);
         recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
@@ -130,6 +140,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         monthOutText.setText(String.valueOf(monthOutSum));
         monthInSum = getMonthInSum();
         monthInText.setText(String.valueOf(monthInSum));
+        budgetLeft = getBudgetLeft();
+        Log.d(TAG, "onResume:budgetLeft " + budgetLeft) ;
+        budgetLeftText.setText(String.valueOf(budgetLeft));
         accountList.clear();
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month =? and day=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day)},null,null,null);
@@ -187,6 +200,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return sum;
     }
 
+    /**
+     * 获取剩余预算
+     */
+    private int getBudgetLeft(){
+        SharedPreferences sharedPreferences = MyApplication.getContext().getSharedPreferences("data",MODE_PRIVATE);
+        if(!sharedPreferences.getString("budget","0").equals("")){
+            return Integer.valueOf(sharedPreferences.getString("budget","0"));
+        }
+        return 0;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -197,6 +221,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.budget_button:
                 Intent budgetIntent = new Intent(MyApplication.getContext(),SetBudgetActivity.class);
                 startActivity(budgetIntent);
+                break;
+            case R.id.eye:
+                if(count % 2 != 0){
+                    monthOutText.setText("***");
+                    monthInText.setText("***");
+                    budgetLeftText.setText("***");
+                }else{
+                    monthOutText.setText(String.valueOf(monthOutSum));
+                    monthInText.setText(String.valueOf(monthInSum));
+                    budgetLeftText.setText(String.valueOf(budgetLeft));
+                }
+                count++;
                 break;
         }
     }
