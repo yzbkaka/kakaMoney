@@ -18,7 +18,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".home.AddActivity" />
-        <activity android:name=".home.SelectTimeActivity"
+        <activity
+            android:name=".home.SelectTimeActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".home.SetBudgetActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
     </application>
 

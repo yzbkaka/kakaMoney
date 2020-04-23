@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yzbkaka.kakamoney.home.SetBudgetActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="17sp"
+            android:textColor="#000"
+            android:text="￥"/>
+
+        <EditText
+            android:id="@+id/budget_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:hint="输入本月预算"
+            android:textSize="20sp"
+            android:textColor="#000" />
+    </LinearLayout>
+
+    <Button
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimary"
+        android:textColor="#fff"
+        android:text="确定"/>
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="30dp"></LinearLayout>
+
+</LinearLayout>

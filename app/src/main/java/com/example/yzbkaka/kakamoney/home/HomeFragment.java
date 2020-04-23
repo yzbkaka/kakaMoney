@@ -1,15 +1,9 @@
 package com.example.yzbkaka.kakamoney.home;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,24 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.R;
+import com.example.yzbkaka.kakamoney.Type;
 import com.example.yzbkaka.kakamoney.db.MyDatabaseHelper;
 import com.example.yzbkaka.kakamoney.model.Account;
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -51,13 +39,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 本月支出text
      */
-    private TextView monthSpend;
+    private TextView monthOutText;
 
     private Button eye;
 
-    private TextView monthIncome;
+    /**
+     * 本月收入text
+     */
+    private TextView monthInText;
 
-    private TextView monthBudget;
+    /**
+     * 本月预算text
+     */
+    private TextView monthBudgetText;
+
+    /**
+     * 预算按钮
+     */
+    private Button budgetButton;
 
     private RecyclerView recyclerView;
 
@@ -75,7 +74,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private int year,month,day;
 
-    private int monthSpendSum = 0;
+    /**
+     * 本月支出总和
+     */
+    private int monthOutSum = 0;
+
+    /**
+     * 本月收入总和
+     */
+    private int monthInSum = 0;
 
 
 
@@ -84,12 +91,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         collapsingToolbarLayout = (CollapsingToolbarLayout)view.findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar)view.findViewById(R.id.home_toolbar);
-        monthSpend = (TextView)view.findViewById(R.id.month_spend);
+        monthOutText = (TextView)view.findViewById(R.id.month_spend);
         eye = (Button)view.findViewById(R.id.eye);
-        monthIncome = (TextView)view.findViewById(R.id.month_income);
-        monthBudget = (TextView)view.findViewById(R.id.month_budget);
+        monthInText = (TextView)view.findViewById(R.id.month_income);
+        monthBudgetText = (TextView)view.findViewById(R.id.month_budget);
+        budgetButton = (Button)view.findViewById(R.id.budget_button);
+        budgetButton.setOnClickListener(this);
         recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
         add = (FloatingActionButton)view.findViewById(R.id.add);
+        add.setOnClickListener(this);
         databaseHelper = MyDatabaseHelper.getInstance();
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -111,31 +121,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 count++;
             }
         });
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MyApplication.getContext(),AddActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        monthOutSum = getMonthOutSum();
+        monthOutText.setText(String.valueOf(monthOutSum));
+        monthInSum = getMonthInSum();
+        monthInText.setText(String.valueOf(monthInSum));
         accountList.clear();
-        monthSpendSum = getMonthSpendSum();
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month =? and day=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(day)},null,null,null);
-        if(cursor.moveToFirst()){
+        if(cursor != null){
             while (cursor.moveToNext()){
                 Account account = new Account();
                 account.setMoney(cursor.getString(cursor.getColumnIndex("money")));
                 account.setMessage(cursor.getString(cursor.getColumnIndex("message")));
-                Log.d(TAG, "message: " + account.getMessage());
                 account.setKind(cursor.getInt(cursor.getColumnIndex("kind")));
                 account.setType(cursor.getInt(cursor.getColumnIndex("type")));
-                Log.d(TAG, "type: " + account.getType());
                 account.setYear(cursor.getInt(cursor.getColumnIndex("year")));
                 account.setMonth(cursor.getInt(cursor.getColumnIndex("month")));
                 account.setDay(cursor.getInt(cursor.getColumnIndex("day")));
@@ -147,17 +151,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
-        monthSpend.setText(String.valueOf(monthSpendSum));
     }
 
     /**
      * 获取本月总支出
      */
-    public int getMonthSpendSum(){
+    public int getMonthOutSum(){
         int sum = 0;
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month =?",new String[]{String.valueOf(year), String.valueOf(month)},null,null,null);
-        if(cursor.moveToFirst()){
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month=? and kind=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(Type.OUT)},null,null,null);
+        if(cursor != null){
+            while (cursor.moveToNext()){
+                if(!cursor.getString(cursor.getColumnIndex("money")).equals("")){
+                    sum = sum + Integer.parseInt(cursor.getString(cursor.getColumnIndex("money")));
+                }
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * 获取本月总收入
+     */
+    private int getMonthInSum(){
+        int sum = 0;
+        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month=? and kind=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(Type.IN)},null,null,null);
+        if(cursor != null){
             while (cursor.moveToNext()){
                 if(!cursor.getString(cursor.getColumnIndex("money")).equals("")){
                     sum = sum + Integer.parseInt(cursor.getString(cursor.getColumnIndex("money")));
@@ -169,7 +189,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.add:
+                Intent addIntent = new Intent(MyApplication.getContext(),AddActivity.class);
+                startActivity(addIntent);
+                break;
+            case R.id.budget_button:
+                Intent budgetIntent = new Intent(MyApplication.getContext(),SetBudgetActivity.class);
+                startActivity(budgetIntent);
+                break;
+        }
     }
 }
 

@@ -81,12 +81,4 @@
             android:hint="请输入备注信息"/>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_gravity="end"
-        android:src="@drawable/save"/>
-
-
 </LinearLayout>
