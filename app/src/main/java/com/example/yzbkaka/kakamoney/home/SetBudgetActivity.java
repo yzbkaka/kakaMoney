@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.R;
 
-public class SetBudgetActivity extends AppCompatActivity {
+public class SetBudgetActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText budgetEditText;
 
@@ -24,21 +24,22 @@ public class SetBudgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_budget);
         budgetEditText = (EditText)findViewById(R.id.budget_edit_text);
-        saveBudgetButton = (Button)findViewById(R.id.save_budget);
-        budget = String.valueOf(budgetEditText.getText());
-        saveBudgetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        saveBudgetButton = (Button)findViewById(R.id.save_budget_button);
+        saveBudgetButton.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.save_budget_button:
+                budget = budgetEditText.getText().toString();
                 SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
                 editor.putString("budget",budget);
                 editor.apply();
+                Toast.makeText(SetBudgetActivity.this, budget, Toast.LENGTH_SHORT).show();
                 finish();
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+                break;
+        }
     }
 }

@@ -21,7 +21,10 @@
         <activity
             android:name=".home.SelectTimeActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".home.SetBudgetActivity"
+        <activity
+            android:name=".home.SetBudgetActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".home.AlterActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
     </application>
 

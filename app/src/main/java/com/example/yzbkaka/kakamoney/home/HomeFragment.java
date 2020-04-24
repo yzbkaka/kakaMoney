@@ -11,13 +11,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.R;
 import com.example.yzbkaka.kakamoney.Type;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 
@@ -46,7 +43,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
      */
     private TextView monthOutText;
 
-    private Button eye;
+    /**
+     * 设置可见/不可见
+     */
+    private Button hideButton;
 
     /**
      * 本月收入text
@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
 
-    private FloatingActionButton add;
+    private FloatingActionButton addButton;
 
     private int count = 0;
 
@@ -96,42 +96,49 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         collapsingToolbarLayout = (CollapsingToolbarLayout)view.findViewById(R.id.collapsing_toolbar);
         toolbar = (Toolbar)view.findViewById(R.id.home_toolbar);
-        monthOutText = (TextView)view.findViewById(R.id.month_spend);
-        eye = (Button)view.findViewById(R.id.eye);
-        eye.setOnClickListener(this);
-        monthInText = (TextView)view.findViewById(R.id.month_income);
-        budgetLeftText = (TextView)view.findViewById(R.id.month_budget);
+        monthOutText = (TextView)view.findViewById(R.id.month_out_text);
+        hideButton = (Button)view.findViewById(R.id.hide_button);
+        hideButton.setOnClickListener(this);
+        monthInText = (TextView)view.findViewById(R.id.month_in_text);
+        budgetLeftText = (TextView)view.findViewById(R.id.budget_left_text);
         budgetButton = (Button)view.findViewById(R.id.budget_button);
         budgetButton.setOnClickListener(this);
         recyclerView = (RecyclerView)view.findViewById(R.id.today_recycler_view);
-        add = (FloatingActionButton)view.findViewById(R.id.add);
-        add.setOnClickListener(this);
+        addButton = (FloatingActionButton)view.findViewById(R.id.add);
+        addButton.setOnClickListener(this);
         databaseHelper = MyDatabaseHelper.getInstance();
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DATE);
-        initView();
+        adapter = new AccountAdapter(accountList);
+        adapter.setOnItemCLickListener(new AccountAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Account account = accountList.get(position);
+                int alterKind = account.getKind();
+                String alterMoney = account.getMoney();
+                String alterMessage = account.getMessage();
+                int alterYear = account.getYear();
+                int alterMonth = account.getMonth();
+                int alterDay = account.getDay();
+                Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
+                intent.putExtra("alertKind",alterKind);
+                intent.putExtra("alertMoney",alterMoney);
+                intent.putExtra("alertMessage",alterMessage);
+                intent.putExtra("alertYear",alterYear);
+                intent.putExtra("alertMonth",alterMoney);
+                intent.putExtra("alertDay",alterDay);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
-    private void initView(){
-        if(count % 2 != 0){
-
-        }else {
-
-        }
-        eye.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                count++;
-            }
-        });
-    }
 
     @Override
     public void onResume() {
@@ -141,7 +148,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         monthInSum = getMonthInSum();
         monthInText.setText(String.valueOf(monthInSum));
         budgetLeft = getBudgetLeft();
-        Log.d(TAG, "onResume:budgetLeft " + budgetLeft) ;
         budgetLeftText.setText(String.valueOf(budgetLeft));
         accountList.clear();
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
@@ -160,7 +166,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
             cursor.close();
         }
-        adapter = new AccountAdapter(accountList);
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
@@ -206,7 +211,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private int getBudgetLeft(){
         SharedPreferences sharedPreferences = MyApplication.getContext().getSharedPreferences("data",MODE_PRIVATE);
         if(!sharedPreferences.getString("budget","0").equals("")){
-            return Integer.valueOf(sharedPreferences.getString("budget","0"));
+            return Integer.valueOf(sharedPreferences.getString("budget","0")) - monthOutSum;
         }
         return 0;
     }
@@ -222,8 +227,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Intent budgetIntent = new Intent(MyApplication.getContext(),SetBudgetActivity.class);
                 startActivity(budgetIntent);
                 break;
-            case R.id.eye:
-                if(count % 2 != 0){
+            case R.id.hide_button:
+                if(count % 2 == 0){
                     monthOutText.setText("***");
                     monthInText.setText("***");
                     budgetLeftText.setText("***");
@@ -234,6 +239,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
                 count++;
                 break;
+
         }
     }
 }

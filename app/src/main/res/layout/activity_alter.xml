@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yzbkaka.kakamoney.home.AlterActivity">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/alter_type_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/food_pressed"/>
+
+        <TextView
+            android:id="@+id/alter_type_name"
+            android:layout_toRightOf="@+id/alter_type_image"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:text="餐饮"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/alter_money_edit_text"
+            android:layout_centerVertical="true"
+            android:text="￥"/>
+
+        <EditText
+            android:id="@+id/alter_money_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:text="2000" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="2dp"
+        android:background="#dbdbdbdb"></LinearLayout>
+
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:text="备注"/>
+
+        <EditText
+            android:id="@+id/alter_message_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#dbdbdbdb"></LinearLayout>
+
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:text="时间"/>
+
+        <Button
+            android:id="@+id/alter_time_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toLeftOf="@+id/alter_time_edit_text"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/time"/>
+
+        <EditText
+            android:id="@+id/alter_time_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#dbdbdbdb"></LinearLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="90dp">
+
+        <Button
+            android:id="@+id/alter_delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="删除" />
+
+        <Button
+            android:id="@+id/alter_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/alter_delete_button"
+            android:text="确定"
+            android:background="@color/colorPrimary"/>
+    </RelativeLayout>
+
+</LinearLayout>
