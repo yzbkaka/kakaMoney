@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(int position) {
                 Account account = accountList.get(position);
-                int alterKind = account.getKind();
+                /*int alterKind = account.getKind();
                 String alterMoney = account.getMoney();
                 String alterMessage = account.getMessage();
                 int alterYear = account.getYear();
@@ -132,7 +132,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 intent.putExtra("alertMessage",alterMessage);
                 intent.putExtra("alertYear",alterYear);
                 intent.putExtra("alertMonth",alterMoney);
-                intent.putExtra("alertDay",alterDay);
+                intent.putExtra("alertDay",alterDay);*/
+                Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
+                intent.putExtra("account",account);
                 startActivity(intent);
             }
         });
@@ -155,6 +157,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(cursor != null){
             while (cursor.moveToNext()){
                 Account account = new Account();
+                account.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 account.setMoney(cursor.getString(cursor.getColumnIndex("money")));
                 account.setMessage(cursor.getString(cursor.getColumnIndex("message")));
                 account.setKind(cursor.getInt(cursor.getColumnIndex("kind")));

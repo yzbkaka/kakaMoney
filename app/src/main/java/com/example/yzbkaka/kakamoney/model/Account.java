@@ -1,10 +1,14 @@
 package com.example.yzbkaka.kakamoney.model;
 
+import java.io.Serializable;
+
 /**
  * Created by yzbkaka on 20-4-21.
  */
 
-public class Account {
+public class Account implements Serializable {
+
+    private int id;
 
     private String money;
 
@@ -19,6 +23,14 @@ public class Account {
     private int month;
 
     private int day;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getMoney() {
         return money;

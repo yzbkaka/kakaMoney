@@ -25,7 +25,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:hint="0.00"
-            android:textColor="#E32E2E"
+            android:textColor="@color/outColor"
             android:textSize="22sp"/>
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/out_text"
             android:textSize="22sp"
-            android:textColor="#E32E2E"
+            android:textColor="@color/outColor"
             android:text="￥"/>
     </RelativeLayout>
 

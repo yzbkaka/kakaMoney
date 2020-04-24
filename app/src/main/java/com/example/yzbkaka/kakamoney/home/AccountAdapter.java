@@ -66,11 +66,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         holder.typeName.setText(Type.TYPE_NAME[account.getType()]);
         holder.message.setText(account.getMessage());
         holder.money.setText("￥" + account.getMoney());
-        Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
         if(kind == Type.OUT) {
-            holder.money.setTextColor(Color.RED);  //流出字体为红色
+            holder.money.setTextColor(Color.parseColor("#FF595F"));  //流出字体为红色
         } else {
-            holder.money.setTextColor(Color.GREEN);  //流入字体为绿色
+            holder.money.setTextColor(Color.parseColor("#02AE7C"));  //流入字体为绿色
         }
 
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
