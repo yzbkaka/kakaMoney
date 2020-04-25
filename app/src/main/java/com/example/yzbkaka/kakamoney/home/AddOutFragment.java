@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.yzbkaka.kakamoney.R;
 import com.example.yzbkaka.kakamoney.Type;
 import com.example.yzbkaka.kakamoney.db.MyDatabaseHelper;
+import com.example.yzbkaka.kakamoney.setting.Function;
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
 
 import java.util.ArrayList;
@@ -58,6 +59,9 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
 
     private EditText outMessage;
 
+    /**
+     * 默认的流出类型是other
+     */
     private int outType = Type.OTHER;
 
     private Calendar calendar;
@@ -122,17 +126,27 @@ public class AddOutFragment extends Fragment implements View.OnClickListener {
     public void saveOut(){
         money = outText.getText().toString();  //获取输入的消费金额
         message = outMessage.getText().toString();  //获取输入的备注信息
-        if(!String.valueOf(money).equals("")){
-            SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("money",money);
-            contentValues.put("message",message);
-            contentValues.put("kind",Type.OUT);
-            contentValues.put("type",outType);
-            contentValues.put("year",year);
-            contentValues.put("month",month);
-            contentValues.put("day",day);
-            sqLiteDatabase.insert("Account",null,contentValues);
+        int isNumber = Function.isNumber(money);
+        switch (isNumber){
+            case 1:  //如果输入合法
+                SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("money",money);
+                contentValues.put("message",message);
+                contentValues.put("kind",Type.OUT);
+                contentValues.put("type",outType);
+                contentValues.put("year",year);
+                contentValues.put("month",month);
+                contentValues.put("day",day);
+                sqLiteDatabase.insert("Account",null,contentValues);
+                Toast.makeText(MyApplication.getContext(), "存储成功", Toast.LENGTH_SHORT).show();
+                break;
+            case 0:
+                if(!money.equals("")){
+                    Toast.makeText(MyApplication.getContext(), "输入错误，存储失败，请重新输入合法金额", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
     }
 

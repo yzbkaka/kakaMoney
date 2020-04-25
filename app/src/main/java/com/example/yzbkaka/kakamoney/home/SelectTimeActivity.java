@@ -31,7 +31,7 @@ public class SelectTimeActivity extends AppCompatActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 int year = date.getYear();
-                int month = date.getMonth();
+                int month = date.getMonth()+1;
                 int day = date.getDay();
                 Intent intent = new Intent();
                 intent.putExtra("year",year);

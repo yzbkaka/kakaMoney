@@ -16,6 +16,8 @@ import com.example.yzbkaka.kakamoney.R;
 import com.example.yzbkaka.kakamoney.Type;
 import com.example.yzbkaka.kakamoney.db.MyDatabaseHelper;
 import com.example.yzbkaka.kakamoney.model.Account;
+import com.example.yzbkaka.kakamoney.setting.Function;
+import com.example.yzbkaka.kakamoney.setting.MyApplication;
 
 public class AlterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -93,6 +95,10 @@ public class AlterActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.alter_save_button:
                 String money = alterMoneyEditText.getText().toString();
+                if(Function.isNumber(money) == 0){
+                    Toast.makeText(MyApplication.getContext(), "输入错误，修改失败，请重新输入合法金额", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 String message = alterMessageEditText.getText().toString();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("money",money);
@@ -116,6 +122,7 @@ public class AlterActivity extends AppCompatActivity implements View.OnClickList
                     day = data.getIntExtra("day",account.getDay());
                     alterTimeText.setText(year + "年" + month + "月" + day + "日");
                 }
+                break;
         }
     }
 }
