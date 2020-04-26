@@ -120,19 +120,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(int position) {
                 Account account = accountList.get(position);
-                /*int alterKind = account.getKind();
-                String alterMoney = account.getMoney();
-                String alterMessage = account.getMessage();
-                int alterYear = account.getYear();
-                int alterMonth = account.getMonth();
-                int alterDay = account.getDay();
-                Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
-                intent.putExtra("alertKind",alterKind);
-                intent.putExtra("alertMoney",alterMoney);
-                intent.putExtra("alertMessage",alterMessage);
-                intent.putExtra("alertYear",alterYear);
-                intent.putExtra("alertMonth",alterMoney);
-                intent.putExtra("alertDay",alterDay);*/
                 Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
                 intent.putExtra("account",account);
                 startActivity(intent);
