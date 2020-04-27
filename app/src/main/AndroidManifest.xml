@@ -24,8 +24,11 @@
         <activity
             android:name=".home.SetBudgetActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".home.AlterActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
+        <activity
+            android:name=".home.AlterActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".bill.SelectMonthActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
     </application>
 
 </manifest>
