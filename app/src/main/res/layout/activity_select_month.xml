@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="250dp"
+    android:layout_width="155dp"
     android:layout_height="match_parent">
 
 
     <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
         android:layout_gravity="center_horizontal"
@@ -15,59 +16,76 @@
         android:layout_height="wrap_content">
 
         <RadioButton
+            android:id="@+id/january"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一月"/>
+            android:text="1月"/>
 
         <RadioButton
+            android:id="@+id/February"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="二月"/>
+            android:text="2月"/>
 
         <RadioButton
+            android:id="@+id/march"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="三月"/>
+            android:text="3月"/>
 
         <RadioButton
+            android:id="@+id/april"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="四月"/>
+            android:text="4月"/>
 
         <RadioButton
+            android:id="@+id/may"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="五月"/>
+            android:text="5月"/>
 
         <RadioButton
+            android:id="@+id/june"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="七月"/>
+            android:text="6月"/>
 
         <RadioButton
+            android:id="@+id/july"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="八月"/>
+            android:text="7月"/>
 
         <RadioButton
+            android:id="@+id/august"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="九月"/>
+            android:text="8月"/>
 
         <RadioButton
+            android:id="@+id/september"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="十月"/>
+            android:text="9月"/>
 
         <RadioButton
+            android:id="@+id/october"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="十一月"/>
+            android:text="10月"/>
 
         <RadioButton
+            android:id="@+id/november"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="十二月"/>
+            android:text="11月"/>
+
+        <RadioButton
+            android:id="@+id/december"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12月"/>
     </RadioGroup>
 
     <Button
@@ -79,5 +97,9 @@
         android:text="确定"
         android:layout_gravity="center_horizontal"
         android:background="@color/colorPrimary"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"></LinearLayout>
 
 </LinearLayout>

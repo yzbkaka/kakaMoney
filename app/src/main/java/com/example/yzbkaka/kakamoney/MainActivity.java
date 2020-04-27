@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.example.yzbkaka.kakamoney.bill.BillFragment;
 import com.example.yzbkaka.kakamoney.home.HomeFragment;
+import com.example.yzbkaka.kakamoney.table.TableFragment;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment(){
         fragmentList.add(new HomeFragment());
         fragmentList.add(new BillFragment());
-
+        fragmentList.add(new TableFragment());
 
     }
 
