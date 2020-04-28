@@ -101,6 +101,7 @@ public class BillFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_bill,container,false);
         toolbar = (Toolbar)view.findViewById(R.id.bill_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle("账单");
         billSelectTimeButton = (Button)view.findViewById(R.id.bill_select_time_button);
         billSelectTimeButton.setOnClickListener(this);
         billTimeText = (TextView)view.findViewById(R.id.bill_time_text);

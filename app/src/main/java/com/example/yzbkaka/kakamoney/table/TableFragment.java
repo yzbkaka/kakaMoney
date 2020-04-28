@@ -115,6 +115,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_table,container,false);
         toolbar = (Toolbar)view.findViewById(R.id.table_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle("报表");
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         tableSelectTimeButton = (Button)view.findViewById(R.id.table_select_time_button);
         tableSelectTimeButton.setOnClickListener(this);
