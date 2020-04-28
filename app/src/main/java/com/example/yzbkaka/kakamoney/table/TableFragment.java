@@ -12,10 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.yzbkaka.kakamoney.R;
@@ -25,6 +27,7 @@ import com.example.yzbkaka.kakamoney.db.MyDatabaseHelper;
 import com.example.yzbkaka.kakamoney.home.AccountAdapter;
 import com.example.yzbkaka.kakamoney.home.AlterActivity;
 import com.example.yzbkaka.kakamoney.model.Account;
+import com.example.yzbkaka.kakamoney.model.Table;
 import com.example.yzbkaka.kakamoney.setting.Function;
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
 import com.github.mikephil.charting.charts.BarChart;
@@ -36,9 +39,14 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
+import org.w3c.dom.Text;
+
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -47,6 +55,8 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class TableFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = "TableFragment";
 
     public static final int OUT_BUTTON = 1;
 
@@ -73,16 +83,16 @@ public class TableFragment extends Fragment implements View.OnClickListener {
      */
     private PieChart pieChart;
 
-    /**
-     * 柱形图上的数据类型
-     */
-    private PieData pieData;
-
     private RecyclerView recyclerView;
 
-    private AccountAdapter adapter;
+    private TableAdapter adapter;
 
-    private List<Account> accountList = new ArrayList<>();
+    /**
+     * 类别和总金额的映射
+     */
+    private Map<Integer,Float> map = new HashMap<>();
+
+    private List<Table> tableList = new ArrayList<>();
 
     private MyDatabaseHelper databaseHelper;
 
@@ -109,35 +119,27 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         showInButton.setOnClickListener(this);
         pieChart = (PieChart)view.findViewById(R.id.pie_chart);
         recyclerView = (RecyclerView)view.findViewById(R.id.table_recycler_view);
+        adapter = new TableAdapter();
         databaseHelper = MyDatabaseHelper.getInstance();
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
-        adapter = new AccountAdapter(accountList);
-        adapter.setOnItemCLickListener(new AccountAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Account account = accountList.get(position);
-                Intent intent = new Intent(MyApplication.getContext(),AlterActivity.class);
-                intent.putExtra("account",account);
-                startActivity(intent);
-            }
-        });
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        initRecyclerView();
+        adapter.notifyDataSetChanged();
+        sumOut = getSumOut();
+        sumIn = getSumIn();
         initPieChartData();
         pieChart.invalidate();  //数据改变，对图表进行刷新
         tableTimeText.setText(year + "年" + month + "月" + "账单");
-        sumOut = getSumOut();
-        sumIn = getSumIn();
         tableOutText.setText("￥" + String.valueOf(sumOut));
         tableInText.setText("￥" + String.valueOf(sumIn));
-        initRecyclerView();
-        adapter.notifyDataSetChanged();
+
     }
 
     /**
@@ -176,24 +178,35 @@ public class TableFragment extends Fragment implements View.OnClickListener {
      * 从数据库获取数据
      */
     private void initRecyclerView(){
-        accountList.clear();
+        tableList.clear();
+        map.clear();  //map数据清空
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month =?",new String[]{String.valueOf(year), String.valueOf(month)},null,null,null);
+        Cursor cursor = null;
+        if (buttonType == OUT_BUTTON){
+            cursor = sqLiteDatabase.query("Account",null,"kind = ? and year=? and month =?",new String[]{String.valueOf(Type.OUT),String.valueOf(year), String.valueOf(month)},null,null,null);
+        }else{
+            cursor = sqLiteDatabase.query("Account",null,"kind = ? and year=? and month =?",new String[]{String.valueOf(Type.IN),String.valueOf(year), String.valueOf(month)},null,null,null);
+        }
         if(cursor != null){
             while (cursor.moveToNext()){
-                Account account = new Account();
-                account.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                account.setMoney(cursor.getString(cursor.getColumnIndex("money")));
-                account.setMessage(cursor.getString(cursor.getColumnIndex("message")));
-                account.setKind(cursor.getInt(cursor.getColumnIndex("kind")));
-                account.setType(cursor.getInt(cursor.getColumnIndex("type")));
-                account.setYear(cursor.getInt(cursor.getColumnIndex("year")));
-                account.setMonth(cursor.getInt(cursor.getColumnIndex("month")));
-                account.setDay(cursor.getInt(cursor.getColumnIndex("day")));
-                accountList.add(account);
+                int type = cursor.getInt(cursor.getColumnIndex("type"));
+                float money = Float.valueOf(cursor.getString(cursor.getColumnIndex("money")));
+                if(map.containsKey(type)){
+                    map.put(type,map.get(type)+money);
+                }else{
+                    map.put(type,money);
+                }
             }
             cursor.close();
         }
+
+        for(Map.Entry<Integer,Float> entry : map.entrySet()){
+            Table table = new Table();
+            table.setTableType(entry.getKey());
+            table.setTableSum(entry.getValue());
+            tableList.add(table);
+        }
+
         LinearLayoutManager manager = new LinearLayoutManager(MyApplication.getContext());
         manager.setSmoothScrollbarEnabled(true);  //设置流畅滑动
         recyclerView.setHasFixedSize(true);
@@ -207,41 +220,35 @@ public class TableFragment extends Fragment implements View.OnClickListener {
      */
     private void initPieChartData(){
         List<PieEntry> dataList = new ArrayList<>();  //数据集合
-        int daysOfMonth = Function.getDaysOfMonth(month);  //获取该月有多少天
-        for(int x = 1;x <= daysOfMonth;x++){
-            float y = getYValues(x);  //获得当天的数据
-            dataList.add(new PieEntry(x,y));  //向坐标里面添加数据
-        }
         PieDataSet pieDataSet = null;
         if(buttonType == OUT_BUTTON){
+            Log.d(TAG, "initPieChartData: " + "执行out");
+            for(int i = 0;i < tableList.size();i++){
+                float percent = tableList.get(i).getTableSum() / sumOut * 100 ;
+                String typeName = Type.TYPE_NAME[tableList.get(i).getTableType()];
+                Log.d(TAG, "percent:" + percent + " " + "typeName:" + typeName);
+                dataList.add(new PieEntry(percent,typeName));
+            }
             pieDataSet = new PieDataSet(dataList,"支出图");
-            pieDataSet.setColor(Color.parseColor("#FF595F"));  //设置图表颜色
         }else {
+            for(int i = 0;i < tableList.size();i++){
+                float percent = tableList.get(i).getTableSum() / sumIn * 100;
+                String typeName = Type.TYPE_NAME[tableList.get(i).getTableType()];
+                dataList.add(new PieEntry(percent,typeName));
+            }
             pieDataSet = new PieDataSet(dataList,"收入图");
-            pieDataSet.setColor(Color.parseColor("#02AE7C"));
         }
-        pieData = new PieData(pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pieChart.setData(pieData);
-        //initPieChart();
+
+
+       /*dataList.add(new PieEntry(28.6f, "有违章"));
+       dataList.add(new PieEntry(71.3f, "无违章"));
+       PieDataSet pieDataSet = new PieDataSet(dataList, "");
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);*/
     }
 
-    private float getYValues(int x){
-        SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
-        Cursor cursor = null;
-        if(buttonType == OUT_BUTTON){
-            cursor = sqLiteDatabase.query("Account",null,"kind = ? and year = ? and month = ? and day = ?",new String[]{String.valueOf(Type.OUT),String.valueOf(year),String.valueOf(month),String.valueOf(x)},null,null,null);
-        }else{
-            cursor = sqLiteDatabase.query("Account",null,"kind = ? and year = ? and month = ? and day = ?",new String[]{String.valueOf(Type.IN),String.valueOf(year),String.valueOf(month),String.valueOf(x)},null,null,null);
-        }
-        float sum = 0;
-        if(cursor != null){
-            while (cursor.moveToNext()){
-                sum = sum + Float.parseFloat(cursor.getString(cursor.getColumnIndex("money")));
-            }
-            cursor.close();
-        }
-        return sum;
-    }
 
     @Override
     public void onClick(View view) {
@@ -256,6 +263,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                 showInButton.setTextColor(Color.parseColor("#00A8E1"));
                 showOutButton.setBackgroundColor(Color.parseColor("#00A8E1"));
                 showOutButton.setTextColor(Color.parseColor("#FFFFFF"));
+                initRecyclerView();
                 initPieChartData();
                 pieChart.invalidate();
                 break;
@@ -265,6 +273,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                 showOutButton.setTextColor(Color.parseColor("#00A8E1"));
                 showInButton.setBackgroundColor(Color.parseColor("#00A8E1"));
                 showInButton.setTextColor(Color.parseColor("#FFFFFF"));
+                initRecyclerView();
                 initPieChartData();
                 pieChart.invalidate();
                 break;
@@ -280,6 +289,60 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                     tableTimeText.setText(year + "年" + month + "月" + "账单");
                 }
                 break;
+        }
+    }
+
+
+    /**
+     * 内部类，RecyclerVIew适配器
+     */
+    class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder>{
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            ImageView typeImage;
+            TextView typeName;
+            TextView typeNumber;
+            TextView money;
+
+            public ViewHolder(View view) {
+                super(view);
+                typeImage = (ImageView)view.findViewById(R.id.table_type_image);
+                typeName = (TextView)view.findViewById(R.id.table_type_name);
+                typeNumber = (TextView)view.findViewById(R.id.table_number);
+                money = (TextView)view.findViewById(R.id.table_money);
+            }
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.table_recycler_view_item,parent,false);
+            ViewHolder viewHolder = new ViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Table table = tableList.get(position);
+            if(buttonType == OUT_BUTTON){
+                holder.typeImage.setImageResource(Type.TYPE_IMAGE[table.getTableType()]);
+                holder.typeName.setText(Type.TYPE_NAME[table.getTableType()]);
+                holder.typeNumber.setText(String.valueOf((table.getTableSum()/sumOut)*100) + "%");
+                holder.money.setText("￥" + String.valueOf(table.getTableSum()));
+                holder.money.setTextColor(Color.parseColor("#FF595F"));
+            }else{
+                holder.typeImage.setImageResource(Type.TYPE_IMAGE[table.getTableType()]);
+                holder.typeName.setText(Type.TYPE_NAME[table.getTableType()]);
+                holder.typeNumber.setText(String.valueOf((table.getTableSum()/sumIn)*100) + "%");
+                holder.money.setText("￥" + String.valueOf(table.getTableSum()));
+                holder.money.setTextColor(Color.parseColor("#02AE7C"));
+            }
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return tableList.size();
         }
     }
 }

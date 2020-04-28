@@ -252,12 +252,6 @@ public class BillFragment extends Fragment implements View.OnClickListener {
      * 设置图表样式
      */
     private void initBarChart(){
-        barChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MyApplication.getContext(), "233", Toast.LENGTH_SHORT).show();
-            }
-        });
         Description description = new Description();
         description.setText("");
         barChart.setDescription(description);

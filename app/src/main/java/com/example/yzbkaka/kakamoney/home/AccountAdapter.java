@@ -29,7 +29,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     private OnItemClickListener onItemClickListener;
 
 
-
     static class ViewHolder extends RecyclerView.ViewHolder{
         RelativeLayout itemLayout;
         ImageView typeImage;
@@ -50,6 +49,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public AccountAdapter(List<Account> accountList){
         this.accountList = accountList;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
