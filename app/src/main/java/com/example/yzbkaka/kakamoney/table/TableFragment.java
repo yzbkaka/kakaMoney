@@ -30,14 +30,18 @@ import com.example.yzbkaka.kakamoney.model.Account;
 import com.example.yzbkaka.kakamoney.model.Table;
 import com.example.yzbkaka.kakamoney.setting.Function;
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import org.w3c.dom.Text;
 
@@ -83,6 +87,8 @@ public class TableFragment extends Fragment implements View.OnClickListener {
      */
     private PieChart pieChart;
 
+    private PieData pieData;
+
     private RecyclerView recyclerView;
 
     private TableAdapter adapter;
@@ -93,6 +99,8 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     private Map<Integer,Float> map = new HashMap<>();
 
     private List<Table> tableList = new ArrayList<>();
+
+    private List<Integer> colorList = new ArrayList<>();
 
     private MyDatabaseHelper databaseHelper;
 
@@ -124,6 +132,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
+        colorList = getColorList();
         return view;
     }
 
@@ -224,29 +233,89 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         if(buttonType == OUT_BUTTON){
             Log.d(TAG, "initPieChartData: " + "执行out");
             for(int i = 0;i < tableList.size();i++){
-                float percent = tableList.get(i).getTableSum() / sumOut * 100 ;
+                float percent = tableList.get(i).getTableSum();
                 String typeName = Type.TYPE_NAME[tableList.get(i).getTableType()];
                 Log.d(TAG, "percent:" + percent + " " + "typeName:" + typeName);
                 dataList.add(new PieEntry(percent,typeName));
             }
             pieDataSet = new PieDataSet(dataList,"支出图");
+            pieDataSet.setColors(colorList);
         }else {
             for(int i = 0;i < tableList.size();i++){
-                float percent = tableList.get(i).getTableSum() / sumIn * 100;
+                float percent = tableList.get(i).getTableSum();
                 String typeName = Type.TYPE_NAME[tableList.get(i).getTableType()];
                 dataList.add(new PieEntry(percent,typeName));
             }
             pieDataSet = new PieDataSet(dataList,"收入图");
+            pieDataSet.setColors(colorList);
         }
-        PieData pieData = new PieData(pieDataSet);
+        pieData = new PieData(pieDataSet);
+        initPieChart(pieDataSet);
+    }
+
+    /**
+     * 设置饼图样式
+     */
+    private void initPieChart(PieDataSet pieDataSet){
+        Description description = new Description();  //取消右下角文字
+        description.setText("");
+        pieChart.setDescription(description);
+        pieChart.setTransparentCircleRadius(0f);  //设置半透明圆环的半径, 0为透明
+        pieChart.setRotationAngle(-15);  ////设置初始旋转角度
+        pieDataSet.setValueLinePart1OffsetPercentage(80f);   //数据连接线距图形片内部边界的距离，为百分数
+        pieDataSet.setValueLineColor(Color.LTGRAY);  //设置连接线的颜色
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);  //连接线在饼状图外面
+        pieDataSet.setSliceSpace(1f);  // 设置饼块之间的间隔
+        pieDataSet.setHighlightEnabled(true);
+        //设置半透明圆环的半径, 0为透明
+        pieChart.setTransparentCircleRadius(0f);
+
+        //设置初始旋转角度
+        pieChart.setRotationAngle(-15);
+
+        //数据连接线距图形片内部边界的距离，为百分数
+        pieDataSet.setValueLinePart1OffsetPercentage(80f);
+
+        //设置连接线的颜色
+        pieDataSet.setValueLineColor(Color.LTGRAY);
+        // 连接线在饼状图外面
+        pieDataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+
+        // 设置饼块之间的间隔
+        pieDataSet.setSliceSpace(1f);
+        pieDataSet.setHighlightEnabled(true);
+
+        pieChart.setEntryLabelColor(Color.parseColor("#000000"));  //设置类别文字
+        pieChart.setEntryLabelTextSize(7.5f);
+
+        // 设置piecahrt图表点击Item高亮是否可用
+        pieChart.setHighlightPerTapEnabled(true);
+
+        // 绘制内容value，设置字体颜色大小
+        pieData.setDrawValues(true);
+        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueTextSize(11f);
+        pieData.setValueTextColor(Color.DKGRAY);
+        pieChart.setUsePercentValues(true);
         pieChart.setData(pieData);
+    }
 
-
-       /*dataList.add(new PieEntry(28.6f, "有违章"));
-       dataList.add(new PieEntry(71.3f, "无违章"));
-       PieDataSet pieDataSet = new PieDataSet(dataList, "");
-        PieData pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);*/
+    /**
+     * 设置饼图颜色
+     */
+    private List<Integer> getColorList(){
+        List<Integer> list = new ArrayList<>();
+        list.add(Color.parseColor("#8CEBFF"));
+        list.add(Color.parseColor("#C5FF8C"));
+        list.add(Color.parseColor("#FFF78C"));
+        list.add(Color.parseColor("#FFD28C"));
+        list.add(Color.parseColor("#19CAAD"));
+        list.add(Color.parseColor("#8CC7B5"));
+        list.add(Color.parseColor("#ECAD9E"));
+        list.add(Color.parseColor("#FF595F"));
+        list.add(Color.parseColor("#02AE7C"));
+        list.add(Color.parseColor("#D1BA74"));
+        return list;
     }
 
 
@@ -326,13 +395,13 @@ public class TableFragment extends Fragment implements View.OnClickListener {
             if(buttonType == OUT_BUTTON){
                 holder.typeImage.setImageResource(Type.TYPE_IMAGE[table.getTableType()]);
                 holder.typeName.setText(Type.TYPE_NAME[table.getTableType()]);
-                holder.typeNumber.setText(String.valueOf((table.getTableSum()/sumOut)*100) + "%");
+                holder.typeNumber.setText(String.valueOf( (float)Math.round((table.getTableSum()/sumOut)*100*10)/10) + "%");
                 holder.money.setText("￥" + String.valueOf(table.getTableSum()));
                 holder.money.setTextColor(Color.parseColor("#FF595F"));
             }else{
                 holder.typeImage.setImageResource(Type.TYPE_IMAGE[table.getTableType()]);
                 holder.typeName.setText(Type.TYPE_NAME[table.getTableType()]);
-                holder.typeNumber.setText(String.valueOf((table.getTableSum()/sumIn)*100) + "%");
+                holder.typeNumber.setText(String.valueOf(String.valueOf( (float)Math.round((table.getTableSum()/sumIn)*100*10)/10) + "%"));
                 holder.money.setText("￥" + String.valueOf(table.getTableSum()));
                 holder.money.setTextColor(Color.parseColor("#02AE7C"));
             }
@@ -345,4 +414,5 @@ public class TableFragment extends Fragment implements View.OnClickListener {
             return tableList.size();
         }
     }
+
 }
