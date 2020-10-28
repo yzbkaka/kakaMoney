@@ -3,7 +3,7 @@ package com.example.yzbkaka.kakamoney.model;
 import java.io.Serializable;
 
 /**
- * Created by yzbkaka on 20-4-21.
+ * Created by yzbkaka on 20-four-21.
  */
 
 public class Account implements Serializable {

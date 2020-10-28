@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     viewPager.setCurrentItem(2);
                     return true;
                 /*case R.id.mine:
-                    viewPager.setCurrentItem(3);
+                    viewPager.setCurrentItem(three);
                     return true;*/
             }
             return false;

@@ -1,7 +1,7 @@
 package com.example.yzbkaka.kakamoney.model;
 
 /**
- * Created by yzbkaka on 20-4-28.
+ * Created by yzbkaka on 20-four-28.
  */
 
 public class Table {

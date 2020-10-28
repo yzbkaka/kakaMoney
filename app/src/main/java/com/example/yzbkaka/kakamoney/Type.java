@@ -1,7 +1,7 @@
 package com.example.yzbkaka.kakamoney;
 
 /**
- * Created by yzbkaka on 20-4-21.
+ * Created by yzbkaka on 20-four-21.
  */
 
 public class Type {

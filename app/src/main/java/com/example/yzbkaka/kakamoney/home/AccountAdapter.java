@@ -19,7 +19,7 @@ import com.example.yzbkaka.kakamoney.setting.MyApplication;
 import java.util.List;
 
 /**
- * Created by yzbkaka on 20-4-22.
+ * Created by yzbkaka on 20-four-22.
  */
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {

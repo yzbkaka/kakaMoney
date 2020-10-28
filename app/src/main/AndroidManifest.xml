@@ -32,7 +32,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RecommendActivity" />
+        <activity android:name=".WebActivity"></activity>
     </application>
 
 </manifest>

@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                             getName = cursor.getString(cursor.getColumnIndex("name"));
                             getPassword = cursor.getString(cursor.getColumnIndex("password"));
                             if(name.equals(getName) && password.equals(getPassword)) {
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this,RecommendActivity.class);
                                 startActivity(intent);
                                 cursor.close();
                                 finish();
@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
                         }while(cursor.moveToNext());
                     }
                     cursor.close();
-                    Toast.makeText(LoginActivity.this, "输入错误", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -1,7 +1,7 @@
 package com.example.yzbkaka.kakamoney.setting;
 
 /**
- * Created by yzbkaka on 20-4-25.
+ * Created by yzbkaka on 20-four-25.
  */
 
 import java.math.BigDecimal;
