@@ -82,17 +82,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 本月支出总和
      */
-    private int monthOutSum = 0;
+    private float monthOutSum = 0;
 
     /**
      * 本月收入总和
      */
-    private int monthInSum = 0;
+    private float monthInSum = 0;
 
     /**
      * 预算剩余
      */
-    private int budgetLeft = 0;
+    private float budgetLeft = 0;
 
 
     @Override
@@ -164,14 +164,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 获取本月总支出
      */
-    public int getMonthOutSum(){
-        int sum = 0;
+    public float getMonthOutSum(){
+        float sum = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month=? and kind=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(Type.OUT)},null,null,null);
         if(cursor != null){
             while (cursor.moveToNext()){
                 if(!cursor.getString(cursor.getColumnIndex("money")).equals("")){
-                    sum = sum + Integer.parseInt(cursor.getString(cursor.getColumnIndex("money")));
+                    sum = sum + Float.parseFloat(cursor.getString(cursor.getColumnIndex("money")));
                 }
             }
         }
@@ -181,14 +181,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 获取本月总收入
      */
-    private int getMonthInSum(){
-        int sum = 0;
+    private float getMonthInSum(){
+        float sum = 0;
         SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.query("Account",null,"year=? and month=? and kind=?",new String[]{String.valueOf(year), String.valueOf(month), String.valueOf(Type.IN)},null,null,null);
         if(cursor != null){
             while (cursor.moveToNext()){
                 if(!cursor.getString(cursor.getColumnIndex("money")).equals("")){
-                    sum = sum + Integer.parseInt(cursor.getString(cursor.getColumnIndex("money")));
+                    sum = sum + Float.parseFloat(cursor.getString(cursor.getColumnIndex("money")));
                 }
             }
         }
@@ -198,10 +198,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     /**
      * 获取剩余预算
      */
-    private int getBudgetLeft(){
+    private float getBudgetLeft(){
         SharedPreferences sharedPreferences = MyApplication.getContext().getSharedPreferences("data",MODE_PRIVATE);
         if(!sharedPreferences.getString("budget","0").equals("")){
-            return Integer.valueOf(sharedPreferences.getString("budget","0")) - monthOutSum;
+            return Float.valueOf(sharedPreferences.getString("budget","0")) - monthOutSum;
         }
         return 0;
     }
@@ -229,7 +229,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
                 count++;
                 break;
-
         }
     }
 }

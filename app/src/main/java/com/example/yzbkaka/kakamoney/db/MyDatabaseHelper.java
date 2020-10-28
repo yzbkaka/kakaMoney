@@ -3,6 +3,8 @@ package com.example.yzbkaka.kakamoney.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.yzbkaka.kakamoney.setting.MyApplication;
 
@@ -27,6 +29,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + "month integer,"
             + "day integer)";
 
+    public static final String CREATE_USER = "create table User("
+            + "id integer primary key autoincrement,"
+            + "name text,"
+            + "password text)";
+
+
 
     private MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -42,6 +50,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_ACCOUNT);
+        sqLiteDatabase.execSQL(CREATE_USER);
+        Log.e("yzbkaka","创建成功");
     }
 
     @Override

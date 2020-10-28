@@ -86,7 +86,7 @@ public class AddInFragment extends Fragment implements View.OnClickListener {
     public void saveIn(){
         money = inText.getText().toString();  //获取输入的消费金额
         message = inMessage.getText().toString();  //获取输入的备注信息
-        int isNumber = Function.isNumber(money);
+        int isNumber = Function.isNumber(money);  //判断输入金额是否合法
         switch (isNumber){
             case 1:  //如果输入合法
                 SQLiteDatabase sqLiteDatabase = databaseHelper.getWritableDatabase();

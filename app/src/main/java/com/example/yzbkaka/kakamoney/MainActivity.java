@@ -92,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.table:
                     viewPager.setCurrentItem(2);
                     return true;
-                case R.id.mine:
+                /*case R.id.mine:
                     viewPager.setCurrentItem(3);
-                    return true;
+                    return true;*/
             }
             return false;
         }

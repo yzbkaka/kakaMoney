@@ -10,13 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".home.AddActivity" />
         <activity
             android:name=".home.SelectTimeActivity"
@@ -27,8 +21,18 @@
         <activity
             android:name=".home.AlterActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
-        <activity android:name=".bill.SelectMonthActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+        <activity
+            android:name=".bill.SelectMonthActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegistrActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
