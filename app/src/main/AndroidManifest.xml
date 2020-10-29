@@ -34,7 +34,8 @@
         <activity android:name=".RegistrActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RecommendActivity" />
-        <activity android:name=".WebActivity"></activity>
+        <activity android:name=".WebActivity" />
+        <activity android:name="com.example.yzbkaka.WebActivity" />
     </application>
 
 </manifest>

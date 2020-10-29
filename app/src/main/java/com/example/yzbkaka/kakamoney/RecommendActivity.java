@@ -36,29 +36,41 @@ public class RecommendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RecommendActivity.this,WebActivity.class);
-                s
+                startActivity(intent);
+                finish();
             }
         });
 
         two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(RecommendActivity.this,WebActivity.class);
+                startActivity(intent);
             }
         });
 
         three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(RecommendActivity.this,WebActivity.class);
+                startActivity(intent);
             }
         });
 
         four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(RecommendActivity.this,WebActivity.class);
+                startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(RecommendActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
